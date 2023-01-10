@@ -3,8 +3,8 @@ import { getPersona, getPersonaByEmail,createPersona, updatePersona, deletePerso
 
 const router = Router()
 
-router.get('/persona', getPersona)
-router.get('/persona/:correo', getPersonaByEmail)
+router.get('/persona' ,getPersona)  
+router.get('/personaByEmail/:correo', getPersonaByEmail)
 router.post('/persona', createPersona)
 router.patch('/persona/:idpersona', updatePersona)
 router.delete('/persona/:idpersona', deletePersona)
