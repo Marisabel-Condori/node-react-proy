@@ -20,19 +20,6 @@ export const getPersonaByEmail = async (req, res) => {
     }
 }
 
-// export const createPersona = async (req, res) => {
-//     const { nombre, ap_paterno, correo, password } = req.body
-//     try {
-//         const [rows] = await pool.query('INSERT INTO persona(nombre, ap_paterno, correo, password) VALUES (?,?,?,?)', [nombre, ap_paterno, correo, password])
-//         console.log(req.body)
-//         console.log(rows);
-//         res.send({ id: rows.insertId, nombre, ap_paterno, correo, password })
-//         // res.send({rows})
-//     } catch (error) {
-//         return res.status(500).json({ messaje: 'Algo salio mal POST' })
-//     }
-// }
-
 export const createPersona = async (req, res) => {
     console.log("################################## MI PRUEBA ####");
     console.log(req.query);

@@ -16,7 +16,7 @@ import { TOKEN_KEY } from '../config.js'
 // }
 
 const verifyToken =(req, res, next)=>{
-    const token = req.query.token || req.body.token || req.headers['x-acces-token'];
+    const token = req.query.token || req.body.token || req.headers['authorizacion'];
     // const token = req.query.token || req.body.token || req.headers['autorizacion'];
     if (token) {
         jwt.verify(token, TOKEN_KEY, (err, decoded)=>{

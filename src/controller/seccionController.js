@@ -1,17 +1,17 @@
 import { pool } from '../database.js'
 
-export const getCurso = async (req, res) => {
+export const getseccion = async (req,res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM curso')
+        const [rows] = await pool.query('SELECT * FROM seccion')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
     }
 }
 
-export const getCursoById = async (req, res) => {
+export const getseccionById = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM idcurso WHERE idcurso = ?', [req.params.idcurso])
+        const [rows] = await pool.query('SELECT * FROM seccion WHERE idcurso = ?', [req.params.idcurso])
         console.log(rows);
         res.json(rows[0])
     } catch (error) {
@@ -19,16 +19,15 @@ export const getCursoById = async (req, res) => {
     }
 }
 
-export const createCurso = async (req, res) => {
-    var titulo_curso = req.query.titulo_curso;
-    var descripcion_curso = req.query.descripcion_curso;
-    var requisitos = req.query.requisitos;
+export const createseccion = async (req, res) => {
+    var nombre_seccion = req.query.nombre_seccion;
+    var idcurso = req.query.idcurso;
     try {
-        const [rows] = await pool.query('INSERT INTO curso(titulo_curso, descripcion_curso, requisitos) VALUES (?,?,?)', [titulo_curso, descripcion_curso, requisitos])
+        const [rows] = await pool.query('INSERT INTO seccion(idcurso, nombre_seccion) VALUES (?,?)', [idcurso, nombre_seccion])
+        console.log(rows);
         res.json({ status:"exitoso",  message: 'ingreso exitoso' })
     } catch (error) {
-        // return res.status(500).json({ messaje: 'Algo salio mal POST' })
-        console.log(error);
+        return res.status(500).json({ messaje: 'Algo salio mal POST' })
     }
 }
 

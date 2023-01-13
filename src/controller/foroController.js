@@ -1,17 +1,18 @@
 import { pool } from '../database.js'
 
-export const getCurso = async (req, res) => {
+export const getforo = async (req,res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM curso')
+        const [rows] = await pool.query('SELECT * FROM foro')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
     }
 }
 
-export const getCursoById = async (req, res) => {
+export const getforoById = async (req, res) => {
+    var idForo = req.query.idforo
     try {
-        const [rows] = await pool.query('SELECT * FROM idcurso WHERE idcurso = ?', [req.params.idcurso])
+        const [rows] = await pool.query('SELECT * FROM foro WHERE idforo = ?', [idForo])
         console.log(rows);
         res.json(rows[0])
     } catch (error) {
@@ -19,18 +20,18 @@ export const getCursoById = async (req, res) => {
     }
 }
 
-export const createCurso = async (req, res) => {
-    var titulo_curso = req.query.titulo_curso;
-    var descripcion_curso = req.query.descripcion_curso;
-    var requisitos = req.query.requisitos;
-    try {
-        const [rows] = await pool.query('INSERT INTO curso(titulo_curso, descripcion_curso, requisitos) VALUES (?,?,?)', [titulo_curso, descripcion_curso, requisitos])
-        res.json({ status:"exitoso",  message: 'ingreso exitoso' })
-    } catch (error) {
-        // return res.status(500).json({ messaje: 'Algo salio mal POST' })
-        console.log(error);
-    }
-}
+// export const createforo = async (req, res) => {
+//     var tituloforo = req.query.titulo;
+//     var urlforo = req.query.urlforo;
+//     var idSeccion = req.query.idseccion;
+//     try {
+//         const [rows] = await pool.query('INSERT INTO foro(titulo, urlforo, idseccion) VALUES (?,?,?)', [tituloforo, urlforo, idSeccion])
+//         console.log(rows);
+//         res.json({ status:"exitoso",  message: 'ingreso exitoso' })
+//     } catch (error) {
+//         return res.status(500).json({ messaje: 'Algo salio mal POST' })
+//     }
+// }
 
 // // DELETE y UPDATE pendiente. Arreglar en la BASE DE DATOS con ON DELETE CASCADE
 // export const deletePersona = async (req, res) => {

@@ -22,7 +22,8 @@ export const loginauth = async (req, res) => {
                     expires: new Date(Date.now()+1*60*60*1000), httpOnly: true
                 }
                 // res.cookie('jwt', token, cookieOptions)
-                res.json({ status: "exito", message: "validado con exito", token: token,cookie: cookieOptions  })
+                // res.json({ status: "exito", message: "validado con exito", token: token,cookie: cookieOptions  })
+                res.json({status: "exito", token: token, id: buscaEmailBD[0].idpersona })
 
                 console.log(buscaEmailBD[0]);
                 console.log(token);

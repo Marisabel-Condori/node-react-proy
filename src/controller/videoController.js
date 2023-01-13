@@ -1,17 +1,18 @@
 import { pool } from '../database.js'
 
-export const getCurso = async (req, res) => {
+export const getvideo = async (req,res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM curso')
+        const [rows] = await pool.query('SELECT * FROM video')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
     }
 }
 
-export const getCursoById = async (req, res) => {
+export const getvideoById = async (req, res) => {
+    var idSeccion = req.query.idseccion
     try {
-        const [rows] = await pool.query('SELECT * FROM idcurso WHERE idcurso = ?', [req.params.idcurso])
+        const [rows] = await pool.query('SELECT * FROM video WHERE idseccion = ?', [idSeccion])
         console.log(rows);
         res.json(rows[0])
     } catch (error) {
@@ -19,16 +20,16 @@ export const getCursoById = async (req, res) => {
     }
 }
 
-export const createCurso = async (req, res) => {
-    var titulo_curso = req.query.titulo_curso;
-    var descripcion_curso = req.query.descripcion_curso;
-    var requisitos = req.query.requisitos;
+export const createvideo = async (req, res) => {
+    var tituloVideo = req.query.titulo;
+    var urlVideo = req.query.urlvideo;
+    var idSeccion = req.query.idseccion;
     try {
-        const [rows] = await pool.query('INSERT INTO curso(titulo_curso, descripcion_curso, requisitos) VALUES (?,?,?)', [titulo_curso, descripcion_curso, requisitos])
+        const [rows] = await pool.query('INSERT INTO video(titulo, urlvideo, idseccion) VALUES (?,?,?)', [tituloVideo, urlVideo, idSeccion])
+        console.log(rows);
         res.json({ status:"exitoso",  message: 'ingreso exitoso' })
     } catch (error) {
-        // return res.status(500).json({ messaje: 'Algo salio mal POST' })
-        console.log(error);
+        return res.status(500).json({ messaje: 'Algo salio mal POST' })
     }
 }
 
