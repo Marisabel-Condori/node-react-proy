@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { createseccion, getseccion, getseccionById } from "../controller/seccionController.js";
+import { createseccion, getseccion, getseccionByIdCurso } from "../controller/seccionController.js";
 
 const router = Router()
 
 router.get('/seccion' ,getseccion)  
-router.get('/seccionbyidCurso', getseccionById)
+router.get('/seccionbyidCurso', getseccionByIdCurso)
 // router.get('/seccionbyidCurso/:id', getseccionById)
 router.post('/seccion', createseccion)
 // router.patch('/curso/:id', updatePersona)

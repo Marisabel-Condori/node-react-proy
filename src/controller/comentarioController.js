@@ -1,37 +1,41 @@
 import { pool } from '../database.js'
 
-export const getforo = async (req,res) => {
+//INSERT INTO `comentario` ( `idvideo`, `idpersona`, `fecha`, `comentario`, `idrespuesta`) VALUES ( '1', '140', '01-01-2023', 'prueba comentario 1', NULL);
+
+export const getComentario = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM foro')
+        const [rows] = await pool.query('SELECT * FROM comentario')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
     }
 }
 
-export const getforoById = async (req, res) => {
-    var idForo = req.query.idforo
-    try {
-        const [rows] = await pool.query('SELECT * FROM foro WHERE idforo = ?', [idForo])
-        console.log(rows);
-        res.json(rows)
-    } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET byem' })
-    }
-}
-
-// export const createforo = async (req, res) => {
-//     var tituloforo = req.query.titulo;
-//     var urlforo = req.query.urlforo;
-//     var idSeccion = req.query.idseccion;
+// export const getCursoByCategoria = async (req, res) => {
+//     var categoria = req.query.categoria
 //     try {
-//         const [rows] = await pool.query('INSERT INTO foro(titulo, urlforo, idseccion) VALUES (?,?,?)', [tituloforo, urlforo, idSeccion])
+//         const [rows] = await pool.query('SELECT * FROM curso WHERE categoria = ?', [categoria])
 //         console.log(rows);
-//         res.json({ status:"exitoso",  message: 'ingreso exitoso' })
+//         res.json(rows) 
 //     } catch (error) {
-//         return res.status(500).json({ messaje: 'Algo salio mal POST' })
+//         return res.status(500).json({ messaje: 'Algo salio mal GET by' })
 //     }
 // }
+
+export const createComentario = async (req, res) => {
+    var idvideo = req.query.idvideo;
+    var idpersona = req.query.idpersona;
+    var comentario = req.query.comentario;
+    var fecha = req.query.fecha;
+    try {
+        const [rows] = await pool.query('INSERT INTO comentario(idvideo, idpersona, comentario, fecha) VALUES (?,?,?,?)', [idvideo, idpersona, comentario, fecha])
+        console.log(rows.insertId);
+        res.json({ status:"exitoso",  message: 'ingreso exitoso', id:rows.insertId })
+    } catch (error) {
+        // return res.status(500).json({ messaje: 'Algo salio mal POST' })
+        console.log(error);
+    }
+}
 
 // // DELETE y UPDATE pendiente. Arreglar en la BASE DE DATOS con ON DELETE CASCADE
 // export const deletePersona = async (req, res) => {

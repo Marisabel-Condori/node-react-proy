@@ -9,13 +9,14 @@ export const getseccion = async (req,res) => {
     }
 }
 
-export const getseccionById = async (req, res) => {
+export const getseccionByIdCurso = async (req, res) => { 
+    var idCurso = req.query.idcurso
     try {
-        const [rows] = await pool.query('SELECT * FROM seccion WHERE idcurso = ?', [req.params.idcurso])
+        const [rows] = await pool.query('SELECT * FROM seccion WHERE idcurso = ?', [idCurso])
         console.log(rows);
-        res.json(rows[0])
+        res.json(rows)
     } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET byem' })
+        return res.status(500).json({ messaje: 'Algo salio mal GET by' })
     }
 }
 
@@ -25,7 +26,7 @@ export const createseccion = async (req, res) => {
     try {
         const [rows] = await pool.query('INSERT INTO seccion(idcurso, nombre_seccion) VALUES (?,?)', [idcurso, nombre_seccion])
         console.log(rows);
-        res.json({ status:"exitoso",  message: 'ingreso exitoso' })
+        res.json({ status:"exitoso",  message: 'ingreso exitoso', insertId: rows.insertId })
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal POST' })
     }

@@ -1,7 +1,7 @@
 import { pool } from '../database.js';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import { REFRESH_TOKEN_KEY, TOKEN_KEY } from '../config.js';
+import { TOKEN_KEY } from '../config.js';
 
 
 export const loginauth = async (req, res) => {
@@ -9,27 +9,18 @@ export const loginauth = async (req, res) => {
     var password = req.query.password;
     try {
         const [buscaEmailBD] = await pool.query('SELECT * FROM auth WHERE email = ? ', [correo])
-        if (buscaEmailBD.length === 0) res.json({ status: "error", message: "Email incorrecto" })
+        const [datosPersona] = await pool.query('SELECT * FROM persona WHERE idpersona = ? ', [buscaEmailBD[0].idpersona])
+        if (buscaEmailBD.length === 0) return res.json({ status: "error", message: "Email incorrecto" })
         else {
             const pass = await bcrypt.compare(password, buscaEmailBD[0].password)
             if (pass) {
                 //generar un TOKEN 
-                const token = jwt.sign({userId: buscaEmailBD[0].idauth, email: buscaEmailBD[0].email}, TOKEN_KEY, {expiresIn:'3m'})
-                const refreshToken = jwt.sign({userId: buscaEmailBD[0].idauth, email: buscaEmailBD[0].email}, REFRESH_TOKEN_KEY, {expiresIn:'3m'})
-                
-                const verifica = jwt.verify
-                const cookieOptions = {
-                    expires: new Date(Date.now()+1*60*60*1000), httpOnly: true
-                }
-                // res.cookie('jwt', token, cookieOptions)
-                // res.json({ status: "exito", message: "validado con exito", token: token,cookie: cookieOptions  })
-                res.json({status: "exito", token: token, id: buscaEmailBD[0].idpersona })
-
+                const token = jwt.sign({ userId: buscaEmailBD[0].idauth, email: buscaEmailBD[0].email }, TOKEN_KEY, { expiresIn: '5m' })
                 console.log(buscaEmailBD[0]);
                 console.log(token);
-                console.log(cookieOptions);
-            } else {res.json({ status: "error", message: "Password incorrecto" })}
-            //console.log(buscaEmailBD[0].password);
+                return res.json({ status: "exito", token: token, id: buscaEmailBD[0].idpersona, nombre:datosPersona[0].nombre})
+
+            } else { return res.json({ status: "error", message: "Password incorrecto" }) }
         }
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
@@ -37,7 +28,7 @@ export const loginauth = async (req, res) => {
 }
 
 export const logoutauth = async (req, res) => {
-    res.clearCookie('jwt')
+    //res.clea('jwt')
     //res.redirect('/')
 }
 
@@ -92,20 +83,21 @@ export const createauth = async (req, res) => {
 //         return res.status(500).json({ messaje: 'Algo salio mal DELETE' })
 //     }
 // }
-// export const updateauth = async (req, res) => {
-//     const { idauth } = req.params
-//     const { nombre, ap_paterno, correo, password } = req.body
-//     try {
-//         const [result] = await pool.query(
-//             'UPDATE auth SET nombre=IFNULL(?,nombre), ap_paterno=IFNULL(?,ap_paterno), correo=IFNULL(?, correo), password=IFNULL(?,password) WHERE idauth=?', [nombre, ap_paterno, password, correo, idauth])
-//         console.log(result);
-//         if (result.affectedRows === 0) return res.status(404).json({
-//             messaje: "auth no encontrada - update"
-//         })
-//         const [rows] = await pool.query('SELECT * FROM auth WHERE idauth=?', [idauth])
-//         res.json(rows[0])
-//         res.json('recibido')
-//     } catch (error) {
-//         return res.status(500).json({ messaje: 'Algo salio mal UPDATE' })
-//     }
-// }
+export const forgotauth = async (req, res) => {
+    console.log(req);
+    // const { idauth } = req.params
+    // const { nombre, ap_paterno, correo, password } = req.body
+    // try {
+    //     const [result] = await pool.query(
+    //         'UPDATE auth SET nombre=IFNULL(?,nombre), ap_paterno=IFNULL(?,ap_paterno), correo=IFNULL(?, correo), password=IFNULL(?,password) WHERE idauth=?', [nombre, ap_paterno, password, correo, idauth])
+    //     console.log(result);
+    //     if (result.affectedRows === 0) return res.status(404).json({
+    //         messaje: "auth no encontrada - update"
+    //     })
+    //     const [rows] = await pool.query('SELECT * FROM auth WHERE idauth=?', [idauth])
+    //     res.json(rows[0])
+    //     res.json('recibido')
+    // } catch (error) {
+    //     return res.status(500).json({ messaje: 'Algo salio mal UPDATE' })
+    // }
+}

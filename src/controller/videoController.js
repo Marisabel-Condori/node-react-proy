@@ -14,7 +14,7 @@ export const getvideoById = async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM video WHERE idseccion = ?', [idSeccion])
         console.log(rows);
-        res.json(rows[0])
+        res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET byem' })
     }

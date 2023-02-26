@@ -1,58 +1,33 @@
 import { pool } from '../database.js'
 
-export const getCurso = async (req, res) => {
+export const getInscribe = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM curso')
+        const [rows] = await pool.query('SELECT * FROM se_inscribe')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
     }
 }
 
-export const getCursoByCategoria = async (req, res) => {
-    var categoria = req.query.categoria
-    try {
-        const [rows] = await pool.query('SELECT * FROM curso WHERE categoria = ?', [categoria])
-        console.log(rows);
-        res.json(rows) 
-    } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET by' })
-    }
-}
-
-export const getCursoByEstudiante = async (req, res) => {
+export const getInscritosByEstudiante = async (req, res) => {
     var idestudiante = req.query.idestudiante
     try {
-        const [rows] = await pool.query('SELECT c.*, se.fecha FROM se_inscribe se,curso c WHERE se.idcurso = c.idcurso AND se.idestudiante = ?', [idestudiante])
+        const [rows] = await pool.query('SELECT * FROM se_inscribe WHERE idestudiante = ?', [idestudiante])
         console.log(rows);
         res.json(rows) 
     } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET by' })
+        return res.status(500).json({ messaje: 'Algo salio mal GET by seinscribe' })
     }
 }
 
-export const getCursoByInstructor = async (req, res) => {
-    var idInstructor = req.query.idInstructor
+export const createInscribe = async (req, res) => {
+    var idcurso = req.query.idcurso;
+    var idestudiante = req.query.idestudiante;
+    var fecha = req.query.fecha;
     try {
-        const [rows] = await pool.query('SELECT * FROM curso WHERE idInstructor = ?', [idInstructor])
-        console.log(rows);
-        res.json(rows) 
-    } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET by' })
-    }
-}
-
-export const createCurso = async (req, res) => {
-    var titulo_curso = req.query.titulo_curso;
-    var descripcion_curso = req.query.descripcion_curso;
-    var requisitos = req.query.requisitos;
-    var categoria = req.query.categoria;
-    var portada_curso = req.query.portada_curso;
-    var idInstructor = req.query.idInstructor;
-    try {
-        const [rows] = await pool.query('INSERT INTO curso(titulo_curso, descripcion_curso, requisitos, categoria, portada_curso, idInstructor) VALUES (?,?,?,?,?,?)', [titulo_curso, descripcion_curso, requisitos, categoria, portada_curso, idInstructor])
+        const [rows] = await pool.query('INSERT INTO se_inscribe(idcurso, idestudiante, fecha) VALUES (?,?,?)', [idcurso, idestudiante, fecha])
         console.log(rows.insertId);
-        res.json({ status:"exitoso",  message: 'ingreso exitoso', idC:rows.insertId })
+        res.json({ status:"exitoso",  message: 'ingreso exitoso', id:rows.insertId })
     } catch (error) {
         // return res.status(500).json({ messaje: 'Algo salio mal POST' })
         console.log(error);
