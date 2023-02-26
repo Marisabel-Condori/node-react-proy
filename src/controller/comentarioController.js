@@ -11,24 +11,33 @@ export const getComentario = async (req, res) => {
     }
 }
 
-// export const getCursoByCategoria = async (req, res) => {
-//     var categoria = req.query.categoria
-//     try {
-//         const [rows] = await pool.query('SELECT * FROM curso WHERE categoria = ?', [categoria])
-//         console.log(rows);
-//         res.json(rows) 
-//     } catch (error) {
-//         return res.status(500).json({ messaje: 'Algo salio mal GET by' })
-//     }
-// }
+export const getComentariosByIdVideo = async (req, res) => {
+    var idvideo = req.query.idvideo
+    try {
+        const [rows] = await pool.query('SELECT * FROM comentario WHERE idvideo = ?', [idvideo])
+        console.log(rows);
+        res.json(rows) 
+    } catch (error) {
+        return res.status(500).json({ messaje: 'Algo salio mal GET by' })
+    }
+}
 
 export const createComentario = async (req, res) => {
     var idvideo = req.query.idvideo;
     var idpersona = req.query.idpersona;
     var comentario = req.query.comentario;
     var fecha = req.query.fecha;
+
+    /// fecha = 1899-11-30T04:27:40.000Z
+    //  fecha.replace('T', ' ');
+    // fechac = fecha.substring(0, fecha.length()-2)
+    console.log(fecha);
+    var idrespuesta = req.query.idrespuesta;
     try {
-        const [rows] = await pool.query('INSERT INTO comentario(idvideo, idpersona, comentario, fecha) VALUES (?,?,?,?)', [idvideo, idpersona, comentario, fecha])
+        console.log('---------------------insert INTO------------------------------');
+        console.log('idvi '+idvideo +'idper'+ idpersona+'comentario '+ comentario+' fecha '+ fecha+'idrespuesta'+ idrespuesta)
+        console.log('------------------------------');
+        const [rows] = await pool.query('INSERT INTO comentario(idvideo, idpersona, comentario, fecha, idrespuesta) VALUES (?,?,?,?,?)', [idvideo, idpersona, comentario, fecha, idrespuesta])
         console.log(rows.insertId);
         res.json({ status:"exitoso",  message: 'ingreso exitoso', id:rows.insertId })
     } catch (error) {

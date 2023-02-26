@@ -18,6 +18,18 @@ export const getInscritosByEstudiante = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET by seinscribe' })
     }
+} 
+
+export const estaInscrito = async (req, res) => {
+    var idestudiante = req.query.idestudiante
+    var idcurso = req.query.idcurso
+    try {
+        const [rows] = await pool.query('SELECT * FROM se_inscribe WHERE idestudiante=? AND idcurso =?', [idestudiante, idcurso])
+        console.log(rows);
+        res.json(rows) 
+    } catch (error) {
+        return res.status(500).json({ messaje: 'Algo salio mal GET by seinscribe' })
+    }
 }
 
 export const createInscribe = async (req, res) => {
