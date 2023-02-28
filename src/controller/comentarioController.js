@@ -14,11 +14,41 @@ export const getComentario = async (req, res) => {
 export const getComentariosByIdVideo = async (req, res) => {
     var idvideo = req.query.idvideo
     try {
-        const [rows] = await pool.query('SELECT * FROM comentario WHERE idvideo = ?', [idvideo])
+        const [rows] = await pool.query('SELECT * FROM comentario WHERE idvideo = ? order by fecha', [idvideo])
         console.log(rows);
-        res.json(rows) 
+        const rowsRespuestas = [];
+        rows.forEach(comentario => {
+            if (comentario.idrespuesta == null) {
+                rowsRespuestas.push(comentario);
+                rows.forEach(respuestas => {
+                    if (respuestas.idrespuesta == comentario.idcomentario) {
+                        rowsRespuestas.push(respuestas)
+                    }
+                });
+            }
+        });
+        console.log('============>>>>>>> rowsRespuestas');
+        console.log(rowsRespuestas);
+        console.log('============>>>>>>> rowsRespuestas');
+        res.json(rowsRespuestas)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET by' })
+    }
+}
+
+export const getComentariosByIdInstructor = async (req, res) => {
+    var idinstructor = req.query.idinstructor
+    try {
+        const [rows] = await pool.query(
+            'SELECT c.titulo_curso, v.titulo, co.comentario, pe.nombre,pe.ap_paterno, v.idvideo, co.idpersona, co.idcomentario' +
+            ' FROM video v, seccion s, curso c, comentario co, persona pe' +
+            ' WHERE v.idseccion = s.idseccion AND pe.idpersona = co.idpersona AND s.idcurso = c.idcurso AND co.idvideo = v.idvideo AND co.idrespuesta is NULL AND c.idInstructor = ?', [idinstructor])
+        console.log('---------------------- getComentariosByIdInstructor -----------------------');
+        console.log(rows);
+        console.log('-----------------------------------------------------------');
+        res.json(rows)
+    } catch (error) {
+        return res.status(500).json({ messaje: 'Algo salio mal GET getComentariosByIdInstructor' })
     }
 }
 
@@ -35,11 +65,11 @@ export const createComentario = async (req, res) => {
     var idrespuesta = req.query.idrespuesta;
     try {
         console.log('---------------------insert INTO------------------------------');
-        console.log('idvi '+idvideo +'idper'+ idpersona+'comentario '+ comentario+' fecha '+ fecha+'idrespuesta'+ idrespuesta)
+        console.log('idvi ' + idvideo + 'idper' + idpersona + 'comentario ' + comentario + ' fecha ' + fecha + 'idrespuesta' + idrespuesta)
         console.log('------------------------------');
         const [rows] = await pool.query('INSERT INTO comentario(idvideo, idpersona, comentario, fecha, idrespuesta) VALUES (?,?,?,?,?)', [idvideo, idpersona, comentario, fecha, idrespuesta])
         console.log(rows.insertId);
-        res.json({ status:"exitoso",  message: 'ingreso exitoso', id:rows.insertId })
+        res.json({ status: "exitoso", message: 'ingreso exitoso', id: rows.insertId })
     } catch (error) {
         // return res.status(500).json({ messaje: 'Algo salio mal POST' })
         console.log(error);
