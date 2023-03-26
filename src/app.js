@@ -6,6 +6,7 @@ import personaRoute from './routes/personaRoute.js'
 import authRoute from './routes/authRoute.js'
 import cursoRoute from './routes/cursoRoute.js'
 import comentarioRoute from './routes/comentarioRoute.js'
+import notificacionRoute from './routes/notificacionRoute.js'
 import seInscribeRoute from './routes/seInscribeRoute.js'
 import instructorRoute from './routes/instructorRoute.js'
 import seccionRoute from './routes/seccionRoute.js'
@@ -23,6 +24,7 @@ app.use(indexRuta)
 app.use('/api',authRoute)
 app.use('/api',cursoRoute)
 app.use('/api',comentarioRoute)
+app.use('/api',notificacionRoute)
 app.use('/api',seInscribeRoute)
 app.use('/api',seccionRoute)
 app.use('/api',videoRoute)

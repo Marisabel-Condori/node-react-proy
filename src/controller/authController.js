@@ -50,14 +50,16 @@ export const createauth = async (req, res) => {
         // res.json(buscaEmailBD[0])
         if (buscaEmailBD.length > 0) { res.json({ status: "error", message: "Email ya fue registrado" }) }
         else {
-            const salt = await bcrypt.genSalt(6);
+            const salt = await bcrypt.genSalt(6);  
             password = await bcrypt.hash(password, salt)
 
             const [enviapersona] = await pool.query('INSERT INTO persona(nombre, ap_paterno ) VALUES (?,?)', [nombre, apellidos])
             const id = enviapersona.insertId
 
             const [enviaAuth] = await pool.query('INSERT INTO auth(email, password, idpersona ) VALUES (?,?,?)', [correo, password, id])
+            //ADICIONAR CONDICION PARA INGRESAR A DOCENTE O ESTUDIANTE
             const [enviaEstudiante] = await pool.query('INSERT INTO estudiante(idpersona ) VALUES (?)', [id])
+            // const [enviaEstudiante] = await pool.query('INSERT INTO instructor(idpersona ) VALUES (?)', [id])
 
             console.log(password);
             res.json({ id: id, status: "exitoso", message: 'autenticacion exitosa' })

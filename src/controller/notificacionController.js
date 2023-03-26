@@ -2,50 +2,50 @@ import { pool } from '../database.js'
 
 //INSERT INTO `comentario` ( `idvideo`, `idpersona`, `fecha`, `comentario`, `idrespuesta`) VALUES ( '1', '140', '01-01-2023', 'prueba comentario 1', NULL);
 
-export const getComentario = async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT * FROM comentario')
-        res.json(rows)
-    } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET' })
-    }
-}
+// export const getComentario = async (req, res) => {
+//     try {
+//         const [rows] = await pool.query('SELECT * FROM comentario')
+//         res.json(rows)
+//     } catch (error) {
+//         return res.status(500).json({ messaje: 'Algo salio mal GET' })
+//     }
+// }
 
-export const getComentariosByIdVideo = async (req, res) => {
-    var idvideo = req.query.idvideo
-    try {
-        const [rows] = await pool.query('SELECT * FROM comentario WHERE idvideo = ? order by fecha', [idvideo])
-        console.log(rows);
-        const rowsRespuestas = [];
-        rows.forEach(comentario => {
-            if (comentario.idrespuesta == null) {
-                rowsRespuestas.push(comentario);
-                rows.forEach(respuestas => {
-                    if (respuestas.idrespuesta == comentario.idcomentario) {
-                        rowsRespuestas.push(respuestas)
-                    }
-                });
-            }
-        });
-        console.log('============>>>>>>> rowsRespuestas');
-        console.log(rowsRespuestas);
-        console.log('============>>>>>>> rowsRespuestas');
-        res.json(rowsRespuestas)
-    } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET by' })
-    }
-}
-
-export const getComentariosByIdInstructor = async (req, res) => {
-    var idinstructor = req.query.idinstructor
-    var idcurso = req.query.idcurso
+export const getNotificacionByIdInstructor = async (req, res) => {
+    var idinstructor = req.query.idInstructor
     try {
         const [rows] = await pool.query(
-            'SELECT c.titulo_curso, v.titulo, co.comentario, pe.nombre,pe.ap_paterno, v.idvideo, co.idpersona, co.idcomentario' +
-            ' FROM video v, seccion s, curso c, comentario co, persona pe' +
-            ' WHERE v.idseccion = s.idseccion AND pe.idpersona = co.idpersona AND s.idcurso = c.idcurso AND co.idvideo = v.idvideo AND co.idrespuesta is NULL AND c.idInstructor=? AND c.idcurso = ?', [idinstructor, idcurso])
-        console.log('---------------------- getComentariosByIdInstructor -----------------------');
-        console.log(rows);
+        'SELECT COALESCE(t1.nroNot, 0) as nroNot ,t2.idcurso, t2.titulo_curso' +
+            ' FROM (SELECT c.idcurso,c.titulo_curso, COUNT(c.idcurso) AS nroNot' +
+            ' FROM curso c, notificacion n, seccion s, video v, comentario co' +
+            ' WHERE c.idInstructor=n.id_persona_notificada' +
+            ' AND c.idcurso=s.idcurso' +
+            ' AND s.idseccion=v.idseccion' +
+            ' AND co.idvideo=v.idvideo ' + 
+            ' AND co.idcomentario=n.idcomentario' +
+            ' AND n.id_persona_notificada = ?' +
+            ' GROUP BY c.idcurso) t1' +
+            ' LEFT JOIN (SELECT idcurso  , titulo_curso' +
+            ' FROM curso' +
+            ' WHERE idInstructor = ?)t2 ON t1.idcurso = t2.idcurso' +
+
+            ' UNION' +
+
+            ' SELECT COALESCE(t1.nroNot, 0) as nroNot ,t2.idcurso, t2.titulo_curso FROM (SELECT c.idcurso,c.titulo_curso, COUNT(c.idcurso) AS nroNot' +
+            ' FROM curso c, notificacion n, seccion s, video v, comentario co' +
+            ' WHERE c.idInstructor=n.id_persona_notificada' +
+            ' AND c.idcurso=s.idcurso' +
+            ' AND s.idseccion=v.idseccion' +
+            ' AND co.idvideo=v.idvideo' +
+            ' AND co.idcomentario=n.idcomentario' +
+            ' AND n.id_persona_notificada=?' +
+            ' GROUP BY c.idcurso) t1' +
+            ' RIGHT JOIN (SELECT idcurso, titulo_curso' +
+            ' FROM curso' +
+            ' WHERE idInstructor=?)t2 ON t1.idcurso = t2.idcurso', [idinstructor, idinstructor, idinstructor, idinstructor])
+
+        console.log('---------------------- getNotificacionByIdInstructor -----------------------');
+        console.log(rows); 
         console.log('-----------------------------------------------------------');
         res.json(rows)
     } catch (error) {
@@ -67,9 +67,9 @@ export const createComentario = async (req, res) => {
     try {
         const [idPersonaNotificada] = await pool.query('SELECT c.idInstructor FROM curso c, seccion s, video v' +
             ' WHERE v.idseccion=s.idseccion AND s.idcurso=c.idcurso AND v.idvideo=?', [idvideo])
-            console.log('+++++++++++++++++ ID PERSONA NOTIFICADA +++++++++++++++++++++');
-            console.log(idPersonaNotificada[0].idInstructor);
-            console.log('++++++++++++++++++++++++++++++++++++++');
+        console.log('+++++++++++++++++ ID PERSONA NOTIFICADA +++++++++++++++++++++');
+        console.log(idPersonaNotificada[0].idInstructor);
+        console.log('++++++++++++++++++++++++++++++++++++++');
 
         console.log('---------------------insert INTO------------------------------');
         console.log('idvi ' + idvideo + 'idper' + idpersona + 'comentario ' + comentario + ' fecha ' + fecha + 'idrespuesta' + idrespuesta)

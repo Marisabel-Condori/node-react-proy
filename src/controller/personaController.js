@@ -10,6 +10,22 @@ export const getPersona = async (req,res) => {
     }
 }
 
+export const getesEstudianteDocente = async (req, res) => {
+    var idpersona = req.query.idpersona
+    try {
+        const [rowsE] = await pool.query('SELECT * FROM estudiante WHERE idpersona = ?', [idpersona])
+        const [rowsD] = await pool.query('SELECT * FROM instructor WHERE idpersona = ?', [idpersona])
+        console.log('+++++++++++++ ES ESTUDIANTE +++++++++++++++');
+        console.log(rowsE.length);
+        console.log('-------------- ES DOCENTE------------------');
+        console.log(rowsD.length);
+        console.log('++++++++++++++++++++++++++++++++++++++++');
+        res.json({ estudiante: rowsE.length, docente:rowsD.length })
+    } catch (error) {
+        return res.status(500).json({ messaje: 'Algo salio mal GET esetudiantedocente' })
+    }
+}
+
 export const getPersonaByEmail = async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM persona WHERE correo = ?', [req.params.correo])

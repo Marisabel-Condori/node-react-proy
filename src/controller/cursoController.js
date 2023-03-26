@@ -2,7 +2,7 @@ import { pool } from '../database.js'
 
 export const getCurso = async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM curso')
+        const [rows] = await pool.query('SELECT c.*, p.nombre FROM curso c, persona p WHERE c.idInstructor=p.idpersona')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })
@@ -12,7 +12,7 @@ export const getCurso = async (req, res) => {
 export const getCursoByCategoria = async (req, res) => {
     var categoria = req.query.categoria
     try {
-        const [rows] = await pool.query('SELECT * FROM curso WHERE categoria = ?', [categoria])
+        const [rows] = await pool.query('SELECT c.*, p.nombre FROM curso c, persona p  WHERE c.idInstructor=p.idpersona AND c.categoria = ?', [categoria])
         console.log(rows);
         res.json(rows) 
     } catch (error) {
@@ -23,7 +23,7 @@ export const getCursoByCategoria = async (req, res) => {
 export const getCursoByEstudiante = async (req, res) => {
     var idestudiante = req.query.idestudiante
     try {
-        const [rows] = await pool.query('SELECT c.*, se.fecha FROM se_inscribe se,curso c WHERE se.idcurso = c.idcurso AND se.idestudiante = ?', [idestudiante])
+        const [rows] = await pool.query('SELECT c.*, p.nombre, se.fecha FROM se_inscribe se,curso c, persona p WHERE se.idcurso = c.idcurso AND p.idpersona = c.idInstructor AND se.idestudiante = ?', [idestudiante])
         console.log(rows);
         res.json(rows) 
     } catch (error) {
@@ -34,7 +34,7 @@ export const getCursoByEstudiante = async (req, res) => {
 export const getCursoByInstructor = async (req, res) => {
     var idInstructor = req.query.idInstructor
     try {
-        const [rows] = await pool.query('SELECT * FROM curso WHERE idInstructor = ?', [idInstructor])
+        const [rows] = await pool.query('SELECT c.*,p.nombre FROM curso c, persona p WHERE c.idInstructor = p.idpersona AND c.idInstructor = ?', [idInstructor])
         console.log(rows);
         res.json(rows) 
     } catch (error) {
