@@ -3,6 +3,7 @@ import cors from 'cors'
 
 import indexRuta from './routes/indexRoute.js'
 import personaRoute from './routes/personaRoute.js'
+import estudiantesRoute from './routes/estudiantesRoute.js'
 import authRoute from './routes/authRoute.js'
 import cursoRoute from './routes/cursoRoute.js'
 import comentarioRoute from './routes/comentarioRoute.js'
@@ -32,6 +33,7 @@ app.use('/api',foroRoute)
 app.use('/api',instructorRoute)
 //app.use(verifyToken)
 app.use('/api', personaRoute)
+app.use('/api', estudiantesRoute)
 
 app.use((req,res,next) =>{
     res.status(404).json({
