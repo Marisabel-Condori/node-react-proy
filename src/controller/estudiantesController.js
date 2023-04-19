@@ -2,7 +2,8 @@ import { pool } from '../database.js'
 
 export const getEstudiantes = async (req,res) => {
     try {
-        const [rows] = await pool.query('SELECT p.idpersona, p.nombre, p.ap_paterno, p.ci FROM estudiante e, persona p WHERE e.idpersona=p.idpersona')
+        const [rows] = await pool.query('SELECT p.idpersona, p.nombre, p.ap_paterno, p.ci, esDocente(p.idpersona) AS esDocente '+
+        'FROM estudiante e, persona p WHERE e.idpersona=p.idpersona')
         res.json(rows)
     } catch (error) {
         return res.status(500).json({ messaje: 'Algo salio mal GET' })

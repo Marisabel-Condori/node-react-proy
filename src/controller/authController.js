@@ -9,9 +9,9 @@ export const loginauth = async (req, res) => {
     var password = req.query.password;
     try {
         const [buscaEmailBD] = await pool.query('SELECT * FROM auth WHERE email = ? ', [correo])
-        const [datosPersona] = await pool.query('SELECT * FROM persona WHERE idpersona = ? ', [buscaEmailBD[0].idpersona])
         if (buscaEmailBD.length === 0) return res.json({ status: "error", message: "Email incorrecto" })
         else {
+            const [datosPersona] = await pool.query('SELECT * FROM persona WHERE idpersona = ? ', [buscaEmailBD[0].idpersona])
             const pass = await bcrypt.compare(password, buscaEmailBD[0].password)
             if (pass) {
                 //generar un TOKEN 

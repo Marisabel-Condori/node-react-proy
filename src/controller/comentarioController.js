@@ -14,7 +14,7 @@ export const getComentario = async (req, res) => {
 export const getComentariosByIdVideo = async (req, res) => {
     var idvideo = req.query.idvideo
     try {
-        const [rows] = await pool.query('SELECT * FROM comentario WHERE idvideo = ? order by fecha', [idvideo])
+        const [rows] = await pool.query('SELECT co.*, p.nombre FROM comentario co, persona p WHERE p.idpersona=co.idpersona AND idvideo = ? order by fecha', [idvideo])
         console.log(rows);
         const rowsRespuestas = [];
         rows.forEach(comentario => {
