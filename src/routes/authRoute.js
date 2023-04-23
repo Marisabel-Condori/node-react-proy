@@ -7,5 +7,5 @@ router.get('/login', loginauth)
 router.post('/auth', createauth)
 router.patch('/forgot', forgotauth)
 // router.delete('/persona/:idpersona', deletePersona)
-
+ 
 export default router  
