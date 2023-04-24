@@ -23,7 +23,7 @@ export const loginauth = async (req, res) => {
             } else { return res.json({ status: "error", message: "Password incorrecto" }) }
         }
     } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET' })
+        return res.status(500).json({ messaje: error })
     }
 }
 

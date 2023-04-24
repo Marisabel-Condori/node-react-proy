@@ -5,7 +5,7 @@ export const getforo = async (req,res) => {
         const [rows] = await pool.query('SELECT * FROM foro')
         res.json(rows)
     } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET' })
+        return res.status(500).json({ messaje: error })
     }
 }
 

@@ -5,7 +5,7 @@ export const getCurso = async (req, res) => {
         const [rows] = await pool.query('SELECT c.*, p.nombre FROM curso c, persona p WHERE c.idInstructor=p.idpersona')
         res.json(rows)
     } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET' })
+        return res.status(500).json({ messaje: error })
     }
 }
 

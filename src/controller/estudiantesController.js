@@ -6,7 +6,7 @@ export const getEstudiantes = async (req,res) => {
         'FROM estudiante e, persona p WHERE e.idpersona=p.idpersona')
         res.json(rows)
     } catch (error) {
-        return res.status(500).json({ messaje: 'Algo salio mal GET' })
+        return res.status(500).json({ messaje: error })
     }
 }
 

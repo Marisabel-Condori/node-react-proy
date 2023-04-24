@@ -7,7 +7,7 @@ import { pool } from '../database.js'
 //         const [rows] = await pool.query('SELECT * FROM comentario')
 //         res.json(rows)
 //     } catch (error) {
-//         return res.status(500).json({ messaje: 'Algo salio mal GET' })
+//         return res.status(500).json({ messaje: error })
 //     }
 // }
 
