@@ -2,12 +2,12 @@ import { pool } from '../database.js';
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import { TOKEN_KEY } from '../config.js';
-
+    
 
 export const loginauth = async (req, res) => {
     var correo = req.query.correo;
     var password = req.query.password;
-    try {
+    try {        
         const [buscaEmailBD] = await pool.query('SELECT * FROM auth WHERE email = ? ', [correo])
         if (buscaEmailBD.length === 0) return res.json({ status: "error", message: "Email incorrecto" })
         else {
