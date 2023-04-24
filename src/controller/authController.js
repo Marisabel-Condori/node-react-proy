@@ -8,14 +8,23 @@ export const loginauth = async (req, res) => {
     var correo = req.query.correo;
     var password = req.query.password;
     try {        
+        console.log('usuario y contraseaaaaaaa '+correo+' '+password);
         const [buscaEmailBD] = await pool.query('SELECT * FROM auth WHERE email = ? ', [correo])
         if (buscaEmailBD.length === 0) return res.json({ status: "error", message: "Email incorrecto" })
         else {
+        console.log('usuario y contraseaaaaaaa 2222222222222 '+buscaEmailBD.length);
             const [datosPersona] = await pool.query('SELECT * FROM persona WHERE idpersona = ? ', [buscaEmailBD[0].idpersona])
             const pass = await bcrypt.compare(password, buscaEmailBD[0].password)
+        console.log('passsssssssssss '+pass);
+
             if (pass) {
+                console.log('buscaEmailBD[0] ');
+                console.log(buscaEmailBD[0]);
                 //generar un TOKEN 
-                const token = jwt.sign({ userId: buscaEmailBD[0].idauth, email: buscaEmailBD[0].email }, TOKEN_KEY, { expiresIn: '5m' })
+                console.log('passsssssssssss222222 '+buscaEmailBD[0].idauth +' - '+buscaEmailBD[0].email);
+                console.log('keyyyyyyyyyyyyyy '+TOKEN_KEY);
+                const token = jwt.sign({userId:buscaEmailBD[0].idauth,email:buscaEmailBD[0].email},TOKEN_KEY, {expiresIn:'5m'})
+                console.log('------------------------------------');
                 console.log(buscaEmailBD[0]);
                 console.log(token);
                 return res.json({ status: "exito", token: token, id: buscaEmailBD[0].idpersona, nombre:datosPersona[0].nombre})

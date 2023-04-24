@@ -13,7 +13,7 @@ import instructorRoute from './routes/instructorRoute.js'
 import seccionRoute from './routes/seccionRoute.js'
 import videoRoute from './routes/videoRoute.js'
 import foroRoute from './routes/foroRoute.js'
-import verifyToken from './authTok/verifyToken.js'
+// import verifyToken from './authTok/verifyToken.js'
 
 const app = express()
 
